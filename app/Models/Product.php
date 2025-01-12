@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Models\Review;
+use App\Models\Category;
 use App\Models\ProductSize;
+use App\Models\Subcategory;
 use App\Models\OrderProduct;
 use App\Models\ProductColor;
+use App\Models\ChildCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -22,6 +25,8 @@ class Product extends Model
         'image',
         'price',
         'category_id',
+        'subcategory_id',
+        'childcategory_id',
         'size' => 'array',
         'color' => 'array',
 
@@ -38,12 +43,25 @@ class Product extends Model
         'color' => 'json',
         'gallery_images' => 'array',
     ];
+    public function categories()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id')->withDefault([
+            'category_name' => 'Uncategorized',  // Default value if no category is found
+        ]);
+    }
 
-    // Define the relationship with ProductSize
-    //  public function sizes()
-    //  {
-    //      return $this->hasMany(ProductSize::class);
-    //  }
+
+    public function subcategory()
+    {
+        return $this->belongsTo(Subcategory::class, 'subcategory_id','id');
+    }
+
+    public function childcategory()
+    {
+        return $this->belongsTo(ChildCategory::class, 'childcategory_id','id');
+    }
+
+
     public function sizes()
     {
         return $this->belongsToMany(ProductSize::class, 'product_size', 'product_id', 'size_id');

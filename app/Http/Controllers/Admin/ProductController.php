@@ -4,14 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Cart;
 
+use App\Models\Review;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\Review;
 
 use App\Models\ProductSize;
+use App\Models\Subcategory;
 use App\Models\ProductColor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ChildCategory;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
@@ -27,9 +29,14 @@ class ProductController extends Controller
 
         $color = ProductColor::all();
 
+
+        $subcategory = Subcategory::all();
+
+        $childcategories = ChildCategory::all();
+
         $product = new Product;
 
-        return view('admin.product.create', compact('category', 'size', 'color', 'product'));
+        return view('admin.product.create', compact('category', 'childcategories', 'size', 'color', 'product', 'subcategory'));
     }
 
     public function upload_product(Request $request)
@@ -38,10 +45,15 @@ class ProductController extends Controller
         // $request->validate([
         //     'title' => 'required|string|max:255',
         //     'description' => 'required|string',
-        //     'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        //     'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10000',
         //     'price' => 'required|numeric',
-        //     'category' => 'required|exists:categories,id',
+        //     'category_id' => 'required|exists:categories,id',
+        //     'subcategory_id' => 'nullable|exists:subcategories,id',
+        //     'childcategory_id' => 'nullable|exists:childcategories,id',
         //     'quantity' => 'required|integer|min:1',
+        //     'sizes' => 'nullable|array',
+        //     'colors' => 'nullable|array',
+        //     'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         // ]);
 
         // Handle the image upload
@@ -55,7 +67,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagename = time() . '.' . $image->getClientOriginalExtension();
-            $image->move('products', $imagename);
+            $image->move(public_path('products'), $imagename);
             $product->image = $imagename;
         }
 
@@ -82,7 +94,10 @@ class ProductController extends Controller
 
         $product->gallery_images = $fileNameToStore;
         $product->price = $request->price;
-        $product->category = $request->category;
+        // Set category, subcategory, and childcategory
+        $product->category_id = $request->category_id;
+        $product->subcategory_id = $request->subcategory_id;
+        $product->childcategory_id = $request->childcategory_id;
         $product->quantity = $request->quantity;
         // Encode arrays to JSON for sizes and colors
         $product->size = json_encode($request->sizes ?? []);
@@ -134,14 +149,16 @@ class ProductController extends Controller
         //     }
         // }
 
-        toastr()->timeOut(5000)->success('Product created successfully.');
+        toastr()->timeOut(5000)->warning('Product created successfully.');
+        session()->flash('Product created successfully.');
         return redirect()->route('view.product');
     }
 
     public function view_product()
     {
-        $productData = Product::paginate(10);
+        $productData = Product::with('subcategory','categories','childcategory')->paginate(10);
         // $productData = Product::all();
+
 
         return view('admin.product.index', compact('productData'));
     }
@@ -161,23 +178,29 @@ class ProductController extends Controller
 
         $productData->delete();
 
-        toastr()->timeOut(10000)->closeButton()->success('Product deleted successful.');
+        // toastr()->timeOut(10000)->closeButton()->success('Product deleted successful.');
+        session()->flash('success','Product deleted successful.');
 
-        return redirect('/view_product');
+        return redirect()->back();
     }
 
     public function edit_product($id)
     {
-        $product = Product::find($id);
+        $product = Product::with('subcategory','childcategory')->find($id);
         $category = Category::all();
         $size = ProductSize::all(); // Assuming you have a `Size` model
         $color = ProductColor::all(); // Assuming you have a `Color` model
+
+
+        $subcategory = Subcategory::all();
+
+        $childcategories= ChildCategory::all();
 
         // If they are stored as JSON strings, decode them:
         $product->size = is_string($product->size) ? json_decode($product->size, true) : $product->size;
         $product->color = is_string($product->color) ? json_decode($product->color, true) : $product->color;
 
-        return view('admin.product.edit', compact('product', 'category', 'size', 'color'));
+        return view('admin.product.edit', compact('product', 'category','childcategories','subcategory', 'size', 'color'));
     }
     public function update_product(Request $request, $id)
     {
@@ -187,7 +210,8 @@ class ProductController extends Controller
         $product->description = $request->description;
         $product->price = $request->price;
         $product->quantity = $request->quantity;
-        $product->category = $request->category;
+        $product->category_id = $request->category_id;
+        $product->subcategory_id = $request->subcategory_id;
 
         // Ensure the values are encoded only if they are arrays
         // $product->size = is_array($request->size) ? json_encode($request->size) : $request->size;
@@ -256,7 +280,9 @@ class ProductController extends Controller
 
         $product->save();
 
-        toastr()->timeOut(10000)->closeButton()->success('Product updated successfully.');
+        // toastr()->timeOut(10000)->closeButton()->success('Product updated successfully.');
+
+        session()->flash('success',"Updated product data");
 
         return redirect('/view_product');
     }
@@ -305,7 +331,7 @@ class ProductController extends Controller
         // }
 
 
-        $product = Product::find($id);
+        $product = Product::with('categories','subcategory','childcategory')->find($id);
         // Retrieve the product along with its sizes
         // $product = Product::with('sizes', 'colors')->find($id);
         // $sizes = $product->sizes;
@@ -325,10 +351,24 @@ class ProductController extends Controller
             $count = '';
         }
 
+        // session()->flash('success', 'Child category added successfully!');
+
         // Decode gallery_images
         // $product->gallery_images = is_string($product->gallery_images)
         //     ? json_decode($product->gallery_images, true)
         //     : $product->gallery_images;
+
+        // if (!$product->category) {
+        //     toastr()->warning('No category found');
+        // }
+
+        if (request()->ajax()) {
+            return view('home.partials.product_details', compact('product','count'));
+            // return view('home.partials.product_details', compact('product'));
+        }
+
+        // dd($product->category->category_name);
+    
 
         return view('home.pages.product_details', compact('product', 'count'));
     }

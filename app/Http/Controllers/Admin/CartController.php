@@ -77,7 +77,9 @@ class CartController extends Controller
 
 
 
-        toastr()->timeOut(10000)->success('Add to Cart Successful');
+        // toastr()->timeOut(10000)->success('Add to Cart Successful');
+
+        session()->flash('success', 'Cart Item added successfully!');
 
         // $data->save();
         // return redirect()->route('add.cart')->with('success', 'Add to Cart Successful');

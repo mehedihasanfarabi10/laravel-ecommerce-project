@@ -1,28 +1,32 @@
 @extends('admin.layout.app')
 <style>
-    th {
-        background-color: skyblue;
-        border: 2px solid blueviolet;
-        color: white;
-        padding: 10px;
-    }
-
-    td {
-        background-color: yellowgreen;
-        border: 2px solid red;
-        color: white;
-        padding: 10px;
-    }
-
     table {
-        border-spacing: 10px 5px;
-        /* Space between columns and rows */
         width: 100%;
-        /* Optional: Adjust table width */
+        border-collapse: collapse;
+        margin-top: 20px;
     }
 
-    tr {
-        border: 1px solid white;
+    table th {
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        text-align: center;
+    }
+
+    tr{
+        border: 1px solid black;
+    }
+
+    table td {
+        background-color: #fafafa;
+        color: #000000;
+        border: 2px solid rgb(61, 226, 43);
+        padding: 10px;
+        text-align: center;
+    }
+
+    table tbody tr:hover {
+        background-color: #e9ecef;
     }
 
     .styless {
@@ -59,9 +63,16 @@
 
     {{--  <div class="page-content">  --}}
         <div class="page-header">
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            @endif
             <!-- <h3 style="color:crimson" class=" div_design">All Products</h3> -->
             <div class="container-fluid">
                 <div class="container-fluid">
+                   
 
                     <form action="{{ url('product_search') }}" method="get">
                         @csrf
@@ -86,6 +97,9 @@
                                     Category
                                 </th>
                                 <th>
+                                    Subcategory
+                                </th>
+                                <th>
                                     Quantity
                                 </th>
                                 <th>
@@ -102,7 +116,7 @@
                                         {{ $data->title }}
                                     </td>
                                     <td>
-                                        {!! Str::limit($data->description, 5) !!}
+                                        {!! Str::limit($data->description, 20) !!}
                                         <!-- {!! Str::words($data->description, 5) !!} -->
                                         <!-- {{ $data->description }} -->
                                     </td>
@@ -110,7 +124,10 @@
                                         {{ $data->price }}
                                     </td>
                                     <td>
-                                        {{ $data->category }}
+                                        {{ $data->categories->category_name }}
+                                    </td>
+                                    <td>
+                                        {{ $data->subcategory->subcategory_name }}
                                     </td>
                                     <td>
                                         {{ $data->quantity }}
@@ -119,9 +136,9 @@
                                         <img height="70" width="80" src="products/{{ $data->image }}">
                                     </td>
                                     <td>
-                                        <a class="btn btn-success" href="{{ url('edit_product', $data->id) }}">Edit</a>
+                                        <a class="btn btn-success" href="{{ url('edit_product', $data->id) }}"> <i class="fas fa-edit"></i></a>
                                         <a onclick="confirmation(event)" class="btn btn-danger"
-                                            href="{{ url('delete_product', $data->id) }}">Delete</a>
+                                            href="{{ url('delete_product', $data->id) }}"> <i class="fa fa-trash"></i></a>
                                     </td>
 
 

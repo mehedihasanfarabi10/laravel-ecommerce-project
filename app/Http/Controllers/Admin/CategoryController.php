@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
-use Str;
+use Illuminate\Support\Str;
+
 
 
 class CategoryController extends Controller
@@ -15,8 +16,17 @@ class CategoryController extends Controller
     public function view_category()
     {
         // Fetch top-level categories with their children recursively
-        $categories  = Category::get()->all();
+        $categories = Category::all();
 
+        // If the request is AJAX, return only the content
+        if (request()->ajax()) {
+            toastr()->success("Data Loaded With Ajax");
+            return view('admin.partials.category', compact('categories'))->render();
+        }
+
+
+        toastr()->error('failed to load');
+        // Otherwise, return the full layout
         return view('admin.pages.category', compact('categories'));
     }
 
@@ -26,7 +36,7 @@ class CategoryController extends Controller
 
         // $validated = $request->validate([
         //     'name' => 'required|string|max:255',
-            
+
         // ]);
 
         // $data = array();
@@ -39,13 +49,13 @@ class CategoryController extends Controller
         // Category::create([
         //     'category_name' => $data['category_name'],
         //     'category_slug' => $data['category_slug'],
-            
+
         // ]);
 
         Category::create([
             'category_name' => $request->category,
-            'category_slug' =>  Str::slug($request->category,'-'),
-            
+            'category_slug' =>  Str::slug($request->category, '-'),
+
         ]);
 
         toastr()->closeButton()->success('Category created successful.');
@@ -68,7 +78,7 @@ class CategoryController extends Controller
         return redirect()->back();
     }
 
-    public function edit_category($id)
+    public function edit($id)
     {
 
         $olddata =  Category::find($id);
@@ -81,6 +91,7 @@ class CategoryController extends Controller
         $data = Category::find($id);
 
         $data->category_name = $request->category_new_name;
+        $data->category_slug = Str::slug($request->category_new_name);
 
         $data->save();
         toastr()->timeOut(5000)->closeButton()->success('Category updated successful.');

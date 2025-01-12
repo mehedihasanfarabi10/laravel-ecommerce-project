@@ -3,6 +3,7 @@
 // use App\Http\Controllers\Admin\CartController;
 // use App\Http\Controllers\Home\PageController;
 
+use App\Http\Controllers\Admin\BrandController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\StripeController;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::controller(StripeController::class)->group(function(){
 
@@ -86,13 +88,36 @@ Route::get('/seller/register', [SellerController::class, 'showRegisterForm'])->n
 Route::post('/seller/register', [SellerController::class, 'register'])->name('seller.register.submit');
 
 
-Route::get('/admin/seller_details', [AdminController::class, 'seller_details'])->middleware(['auth', 'admin'])->name('seller.details');
+// Route::get('/admin/seller_details', [AdminController::class, 'seller_details'])->middleware(['auth', 'admin'])->name('seller.details');
 Route::get('/admin/seller/{id}/edit', [AdminController::class, 'edit_seller'])->name('admin.seller.edit');
 Route::delete('/admin/seller/{id}/delete', [AdminController::class, 'delete_seller'])->name('admin.seller.delete');
 Route::patch('/admin/seller/{id}/activate', [AdminController::class, 'activate_seller'])->name('admin.seller.activate');
 Route::put('/admin/seller/toggle/{id}', [AdminController::class, 'toggleSellerStatus'])->name('admin.sellers.toggle');
 
+Route::get('/users/details', [AdminController::class, 'detailss'])->name('users.details');
+Route::get('/seller/details', [AdminController::class, 'details'])->name('seller.details');
 
-
-Route::get('/admin/user_details', [AdminController::class, 'user_details'])->middleware(['auth', 'admin'])->name('users.details');
+// Route::get('/admin/user_details', [AdminController::class, 'user_details'])->middleware(['auth', 'admin'])->name('users.details');
 Route::delete('/admin/user/{id}/delete', [AdminController::class, 'delete_user'])->name('admin.user.delete');
+
+// Category
+
+Route::get('view_category',[CategoryController::class,'view_category'])->middleware(['auth','admin']);
+Route::post('add_category',[CategoryController::class,'add_category'])->middleware(['auth','admin']);
+Route::get('delete_category/{id}',[CategoryController::class,'delete_category'])->middleware(['auth','admin']);
+Route::get('/edit_category/{id}', [CategoryController::class, 'edit'])->name('edit_category')->middleware(['auth','admin']);
+
+Route::post('update_category/{id}',[CategoryController::class,'update_category'])->middleware(['auth','admin']);
+
+
+// Brand
+
+
+Route::get('brand-show',[BrandController::class,'index'])->middleware(['auth','admin'])->name('brand.index');
+Route::post('store_brand',[BrandController::class,'brandstore'])->middleware(['auth','admin'])->name('brand.store');
+Route::get('brand_delete/{id}',[BrandController::class,'delete'])->middleware(['auth','admin'])->name('brand.delete');
+Route::get('brand_edit/{id}', [BrandController::class, 'edit'])->middleware(['auth','admin'])->name('brand.edit');
+
+Route::post('brand_update/{id}',[BrandController::class,'update'])->middleware(['auth','admin'])->name('brand.update');
+
+

@@ -23,25 +23,23 @@ class AdminController extends Controller
 
     public function index()
     {
-
-        $user = User::where('usertype', 'user')->get()->count();
-
-        $product = Product::get()->count();
-
-        $order = Order::get()->count();
-
-        $delivered = Order::where('status', 'Delivered')->get()->count();
-
-        $seller = Seller::where('usertype', 'seller')->get()->count();
-
-
-
-        // return view('admin.index', compact('user', 'product', 'order', 'delivered'));
+        $user = User::where('usertype', 'user')->count();
+        $product = Product::count();
+        $order = Order::count();
+        $delivered = Order::where('status', 'Delivered')->count();
+        $seller = Seller::where('usertype', 'seller')->count();
+    
+        // Check if the request is an AJAX request
+        if (request()->ajax()) {
+            return view('admin.includes.maindashboard', compact('user', 'product', 'order', 'delivered', 'seller'));
+        }
+    
+        // Return full view for non-AJAX requests
         return view('admin.dashboard', compact('user', 'product', 'order', 'delivered', 'seller'));
     }
+    
 
-
-    public function seller_details()
+    public function details()
     {
 
         $sellers = Seller::all();
@@ -50,7 +48,7 @@ class AdminController extends Controller
     }
 
 
-    public function user_details()
+    public function detailss()
     {
 
         $users = User::all();

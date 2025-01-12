@@ -16,19 +16,13 @@
         color: white !important;
         border: 1px solid #ddd;
         position: relative;
-        /* Ensure table cells are not overlapped */
         z-index: 1;
     }
 
     .order-table td {
-        position: relative;
-        /* Ensure table cells are not overlapped */
-        z-index: 1;
-        /* Bring them to the top */
-        background-color: #2f3c44;
+        background-color: #fcfcfc;
+        color: black!important;
     }
-
-
 
     .order-table th {
         background-color: #22c916;
@@ -52,16 +46,11 @@
         padding: 0;
     }
 
-    .row {
-        width: 100%;
-    }
-
     .div_design {
         font-size: 24px;
         font-weight: bold;
     }
 
-    /* Adjusting the content section */
     .content-area {
         flex-grow: 1;
         padding: 20px;
@@ -80,9 +69,75 @@
     }
 
     tr {
-
         border: 4px;
         color: white;
+    }
+
+    /* Input Field Styling */
+    input[type='search'] {
+        width: 400px;
+        height: 40px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    /* Buttons Styling */
+    .btn {
+        padding: 8px 12px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
     }
 </style>
 
@@ -92,8 +147,6 @@
         {{-- Sidebar and Main Content Area --}}
         <div class="d-flex align-items-stretch" style="width: 100%;">
 
-            
-
             {{-- Main Content --}}
             <div class="content-area">
                 <div class="page-header">
@@ -102,15 +155,12 @@
 
                 <form action="{{ url('order_search') }}" method="get">
                     @csrf
-                    <input width="400px" height="60px" style="margin-bottom: 39px;" type="search" name="search">
-                    <input type="submit" class="btn btn-primary" value="search">
+                    <input type="search" name="search" placeholder="Search Orders">
+                    <input type="submit" class="btn btn-primary" value="Search">
                 </form>
 
                 <div class="table-responsive">
                     <table class="table table-striped order-table">
-
-                        {{--  New Thead  --}}
-
                         <thead>
                             <tr>
                                 <th>Customer Name</th>
@@ -118,8 +168,6 @@
                                 <th>Address</th>
                                 <th>Phone</th>
                                 <th>Product Title</th>
-                                {{--  <th>Size</th> <!-- Add size column -->
-                                <th>Color</th> <!-- Add color column -->  --}}
                                 <th>Price</th>
                                 <th>Product Image</th>
                                 <th>Payment Status</th>
@@ -137,9 +185,6 @@
                                     <td>{{ $order->rec_address }}</td>
                                     <td>{{ $order->phone }}</td>
                                     <td>{{ $order->product->title }}</td>
-                                    {{--  <td>{{ $orderItem->size->name ?? 'N/A' }}</td>
-                                    <td>{{ $orderItem->color->name ?? 'N/A' }}</td>  --}}
-
                                     <td>${{ number_format($order->product->price, 2) }}</td>
                                     <td>
                                         <img src="/products/{{ $order->product->image }}" alt="{{ $order->product->title }}">
@@ -148,8 +193,7 @@
                                     <td>
                                         <button class="btn">
                                             @if ($order->status == 'in progress')
-                                                <span
-                                                    style="color: rgb(240, 22, 192); background-color: rgb(20, 239, 255);">{{ $order->status }}</span>
+                                                <span style="color: rgb(240, 22, 192); background-color: rgb(20, 239, 255);">{{ $order->status }}</span>
                                             @elseif($order->status == 'On The Way')
                                                 <span style="color: rgb(20, 239, 255);">{{ $order->status }}</span>
                                             @elseif($order->status == 'Delivered')
@@ -161,14 +205,13 @@
                                     </td>
 
                                     <td>
-                                        <a href="{{ url('on_the_way', $order->id) }}" class="btn btn-info"> On The Way </a>
+                                        <a href="{{ url('on_the_way', $order->id) }}" class="btn btn-info">On The Way</a>
                                         <a href="{{ url('delievered', $order->id) }}" class="btn btn-success">Delivered</a>
                                         <a href="{{ url('cancelled', $order->id) }}" class="btn btn-warning">Cancelled</a>
                                     </td>
 
-
                                     <td>
-                                        <a href="{{ url('print_pdf', $order->id) }}" class="btn btn-info">Print </a>
+                                        <a href="{{ url('print_pdf', $order->id) }}" class="btn btn-info">Print</a>
                                     </td>
                                     <td>
                                         <form action="{{ url('delete_order', $order->id) }}" method="POST">
@@ -179,7 +222,6 @@
                                 </tr>
                             @endforeach
                         </tbody>
-
                     </table>
                 </div>
             </div>
@@ -188,5 +230,3 @@
     </div>
     {{-- Body End --}}
 @endsection
-
-

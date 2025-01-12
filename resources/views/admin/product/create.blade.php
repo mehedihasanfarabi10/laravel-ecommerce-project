@@ -1,330 +1,315 @@
 @extends('admin.layout.app')
 
-<style>
-    .st {
-        font-size: 18px !important;
-        color: rgb(255, 255, 255) !important;
-    }
+<body>
+    <style>
+        /* General Page Styling */
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    /* Ensure the page content takes full height */
-    .page-content {
-        min-height: calc(100vh - 100px);
-        /* Adjust the content area to fill available space */
-        padding-bottom: 50px;
-        /* Adjust the bottom padding as needed */
-        width: 100%;
-        background-color: #da2a2a;
-        color: rgb(186, 28, 28) !important;
-        /* Ensure it takes full width */
-    }
+        .page-header h3 {
+            color: crimson;
+            font-weight: bold;
+        }
 
-    footer {
-        margin-top: auto;
-        /* Ensure footer stays at the bottom */
-        position: relative;
-    }
+        /* Form container styling */
+        .form-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
 
-    /* Center the form and make it responsive */
-    .form-container {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        flex-direction: column;
-        padding: 20px;
-    }
+        .form-container label {
+            font-weight: bold;
+            color: #333;
+        }
 
-    /* Form Styling */
-    .form-container form {
-        width: 100%;
-        max-width: 800px;
-        /* Limit form width */
-        margin: 0 auto;
-        background-color: #db4566;
-        color: black !important;
-        /* Dark background for contrast */
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+        .form-container select,
+        .form-container input[type='text'],
+        .form-container input[type='number'],
+        .form-container textarea,
+        .form-container input[type='file'] {
+            width: 100%;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
 
-    .form-container .form-control {
-        margin-bottom: 15px;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid white;
-    }
+        .form-container .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
 
-    input {
-        color: white !important;
-    }
+        .form-container .btn:hover {
+            background-color: #0056b3;
+        }
 
-    .form-container .btn {
-        width: 100%;
-        /* Full-width button */
-        padding: 12px;
-        background-color: #28a745;
-        /* Green color */
-        border: none;
-        color: white !important;
-        border-radius: 5px;
-        font-size: 16px;
-    }
+        .form-container .btn-success {
+            background-color: #28a745;
+        }
 
-    .form-container .btn:hover {
-        background-color: #218838;
-        /* Darker green on hover */
-    }
+        .form-container .btn-success:hover {
+            background-color: #218838;
+        }
 
-    .form-container .btn-outline-primary {
-        margin-right: 5px;
-    }
+        .form-container .multi-field {
+            margin-bottom: 15px;
+        }
 
-    /* Ensure consistent spacing */
-    .page-header h3 {
-        color: crimson;
-        margin-bottom: 20px;
-        text-align: center;
-    }
+        /* Checkbox and radio styles */
+        .form-check {
+            margin: 10px 0;
+        }
 
-    .container-fluid {
-        width: 100%;
-    }
+        .form-check-label {
+            margin-left: 5px;
+            color: #555;
+            font-weight: normal;
+        }
 
-    /* Container Styling */
-    .container {
-        max-width: 600px;
-        margin: auto;
-        padding: 7px;
-    }
+        /* Multi-select group styles */
+        .multi-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
-    /* Section Headers */
-    .size-selector h5,
-    .color-selector h5 {
-        margin-bottom: 10px;
+        .multi-option {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px 12px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
 
-    }
+        .multi-option:hover,
+        .multi-option.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
 
-    /* Size Options */
-    .sizes {
-        display: flex;
-        gap: 6px;
-        background-color: #e9dede;
-        color: black !important;
-    }
+        /* Table style */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
 
-    .size-option {
-        border: 2px solid #ccc;
-        background-color: #000000;
-        color: black !important;
-        padding: 7px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+        table th {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
 
-    .size-option:hover,
-    .size-option.active {
-        {{--  background-color: #007bff;  --}} background-color: #007;
-        color: black !important;
+        table td {
+            background-color: #f8f9fa;
+            color: #555;
+            padding: 10px;
+            text-align: center;
+        }
 
-        border-color: #007bff;
-    }
-
-    /* Color Options */
-    .colors {
-        display: flex;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .color-option {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        border: 2px solid #ccc;
-        background-color: #ffffff;
-        color: black !important;
-        cursor: pointer;
-        transition: transform 0.3s ease, border-color 0.3s ease;
-    }
-
-    .color-option:hover,
-    .color-option.active {
-        border-color: #007bff;
-        transform: scale(1.1);
-    }
-
-    .form-check {
-        margin-bottom: 10px;
-    }
-
-    .form-check-label {
-        margin-left: 5px;
-        color: #ffffff !important;
-        /* Adjust color if needed */
-    }
-
-    .d-flex.flex-wrap {
-        gap: 10px;
-        /* Space between checkboxes */
-    }
-</style>
+        table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+</body>
 
 @section('content')
-    <div class="d-flex flex-column" style="min-height: 100vh; width: 100%;">
-        {{-- <div class="page-content">  --}}
-        <div class="page-header">
-            <h3 class="st">Add Product</h3>
-        </div>
+    <div class="page-header">
+        <h3>Add Product</h3>
+    </div>
 
+    <div class="form-container">
+        <form action="{{ url('upload_product') }}" method="post" enctype="multipart/form-data">
+            @csrf
 
+            <!-- Product Title -->
+            <div>
+                <label>Product Title:</label>
+                <input type="text" name="title" placeholder="Enter product title" required>
+            </div>
 
-        <!-- STart -->
+            <!-- Product Description -->
+            <div>
+                <label>Product Description:</label>
+                <textarea name="description" rows="4" placeholder="Enter product description" required></textarea>
+            </div>
 
+            <!-- Product Image -->
+            <div>
+                <label>Upload Product Image:</label>
+                <input type="file" name="image" accept="image/*" required>
+            </div>
 
+            <!-- Additional Product Images -->
+            <div>
+                <label>Upload Additional Images:</label>
+                <input type="file" name="gallery_images[]" accept="image/*" multiple>
+            </div>
 
-        <div class="container-fluid st">
-            <div class="form-container">
-                <form action="{{ url('upload_product') }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <!-- Title -->
-                    <div class="mb-3">
-                        <label for="productTitle" class="form-label st">Title</label>
-                        <input type="text" class="form-control" id="productTitle" name="title"
-                            placeholder="Enter product title" required>
-                    </div>
+            <!-- Product Price -->
+            <div>
+                <label>Product Price:</label>
+                <input type="number" name="price" placeholder="Enter product price" step="0.01" required>
+            </div>
 
-                    <!-- Description -->
-                    <div class="mb-3">
-                        <label for="productDescription" class="form-label st">Description</label>
-                        <textarea class="form-control" id="productDescription" name="description" rows="4"
-                            placeholder="Enter product description" required></textarea>
-                    </div>
-
-                    <!-- Image -->
-                    <div class="mb-3">
-                        <label for="productImage" class="st form-label">Image</label>
-                        <input type="file" class="form-control" id="productImage" name="image" accept="image/*"
-                            required>
-                    </div>
-
-                    <!-- Image upload for multiple images -->
-                    <div class="form-group">
-                        <label for="gallery_images" class="st form-label">Upload more Product Images</label>
-                        <input type="file" name="gallery_images[]" id="gallery_images" accept="image/*"
-                            class="form-control" multiple>
-                    </div>
-
-                    <!-- Price -->
-                    <div class="mb-3">
-                        <label for="productPrice" class="st form-label">Price</label>
-                        <input type="number" class="form-control" id="productPrice" name="price"
-                            placeholder="Enter product price" step="0.01" required>
-                    </div>
-
-                    <!-- Category -->
-                    <div class="mb-3">
+            <!-- Product Category -->
+            {{--  <!-- <div class="mb-3">
                         <label for="productCategory" class="st form-label">Category</label>
-                        <select class="form-select" id="productCategory" name="category" required>
+                        <select class="form-select" id="category_id" name="category_id" required>
                             <option value="" disabled selected>Select category</option>
                             @foreach ($category as $cat)
                                 <option value="{{ $cat->category_name }}">{{ $cat->category_name }}</option>
                             @endforeach
                         </select>
-                    </div>
-                    <!-- Sizes -->
-                    <div class="mb-3">
-                        <label class="st form-label">Sizes : </label>
-                        <div class="d-flex flex-wrap">
-                            @foreach ($size as $s)
-                                <div class="form-check me-3">
-                                    <input type="checkbox" class="text-primary form-check-input"
-                                        id="size_{{ $s->id }}" name="sizes[]" value="{{ $s->size }}">
-                                    <label for="size_{{ $s->id }}"
-                                        class="form-check-label">{{ $s->size }}</label>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+                    </div> -->  --}}
 
-                    {{--  New Color  --}}
-
-                    <div class="mb-3">
-                        <label class="st form-label"> Colors : </label>
-                        <div class="d-flex flex-wrap">
-                            @foreach ($color as $c)
-                                <div class="form-check me-3" style="size: 20px">
-                                    <input type="checkbox" class="form-check-input" id="color_{{ $c->id }}"
-                                        name="colors[]" value="{{ $c->color }}">
-                                    <label for="color_{{ $c->id }}"
-                                        class="form-check-label">{{ $c->color }}</label>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
+            <div
+                style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px;">
 
 
+                <label> Category:</label>
+                <select name="category_id" id="category_id" required>
+                    <option value="">Select Category</option>
+                    @foreach ($category as $category)
+                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                    @endforeach
+                </select>
 
 
-                    <!-- Quantity -->
-                    <div class="mb-3">
-                        <label for="productQuantity" class="st form-label">Quantity</label>
-                        <input type="number" class="form-control" id="productQuantity" name="quantity"
-                            placeholder="Enter product quantity" required>
-                    </div>
+                <!-- Product Subcategory -->
 
-                    <div class="mb-3">
-                        <label for="is_latest">Latest Product:</label>
-                        <input type="checkbox" name="is_latest"
-                            {{ isset($product) && $product->is_latest ? 'checked' : '' }}>
+                <label>Select Subcategory:</label>
+                <select name="subcategory_id" id="subcategory_id" required>
+                    <option value="">Select Subcategory</option>
+                    @foreach ($subcategory as $sub)
+                        <option value="{{ $sub->id }}">{{ $sub->subcategory_name }}</option>
+                    @endforeach
+                </select>
 
-                    </div>
-                    <div class="mb-3">
-                        <label for="is_featured">Featured Product:</label>
-                        <input type="checkbox" name="is_featured"
-                            {{ isset($product) && $product->is_featured ? 'checked' : '' }}>
+                <!-- Product Subcategory -->
 
-                    </div>
-                    <div class="mb-3">
-                        <label for="is_hot_deal">Hot Deal:</label>
-                        <input type="checkbox" name="is_hot_deal" style="color: white;"
-                            {{ isset($product) && $product->is_hot_deal ? 'checked' : '' }}>
-
-                    </div>
-
-
-                    {{--  <label for="collection">Collection:</label>
-                    <input type="text" name="collection" value="{{ $product->collection }}">  --}}
-
-
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-success">Submit</button>
-
-
-                    <!-- Colors -->
-
-
-
-
-
-
-
-
-
-
-                </form>
+                <label>Select Subcategory:</label>
+                <select name="childcategory_id" id="childategory_id" required>
+                    <option value="">Select Childcategory</option>
+                    @foreach ($childcategories as $child)
+                        <option value="{{ $child->id }}">{{ $child->childcategory_name }}</option>
+                    @endforeach
+                </select>
             </div>
-        </div>
 
+            <!-- Sizes -->
+            <div>
+                <label>Available Sizes:</label>
+                <div class="multi-group">
+                    @foreach ($size as $s)
+                        <div class="form-check">
+                            <input type="checkbox" name="sizes[]" value="{{ $s->size }}" id="size_{{ $s->id }}">
+                            <label for="size_{{ $s->id }}" class="form-check-label">{{ $s->size }}</label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
 
+            <!-- Colors -->
+            <div>
+                <label>Available Colors:</label>
+                <div class="multi-group">
+                    @foreach ($color as $c)
+                        <div class="form-check">
+                            <input type="checkbox" name="colors[]" value="{{ $c->color }}"
+                                id="color_{{ $c->id }}">
+                            <label for="color_{{ $c->id }}" class="form-check-label">{{ $c->color }}</label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
 
+            <!-- Product Quantity -->
+            <div>
+                <label>Product Quantity:</label>
+                <input type="number" name="quantity" placeholder="Enter quantity" required>
+            </div>
 
+            <!-- Product Options -->
+            <div class="multi-field">
+                <label>
+                    <input type="checkbox" name="is_latest"> Latest Product
+                </label>
+            </div>
+            <div class="multi-field">
+                <label>
+                    <input type="checkbox" name="is_featured"> Featured Product
+                </label>
+            </div>
+            <div class="multi-field">
+                <label>
+                    <input type="checkbox" name="is_hot_deal"> Hot Deal
+                </label>
+            </div>
 
-
-
-        <!--End  -->
-        {{-- </div>  --}}
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-success">Add Product</button>
+        </form>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        // Fetch and update subcategories when category changes
+        document.getElementById('category_id').addEventListener('change', function() {
+            const categoryId = this.value;
+
+            fetch(`/get-subcategories/${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const subcategoryDropdown = document.getElementById('subcategory_id');
+                    subcategoryDropdown.innerHTML = '<option value="">Select Subcategory</option>';
+
+                    data.subcategories.forEach(subcategory => {
+                        subcategoryDropdown.innerHTML += `
+                        <option value="${subcategory.id}">${subcategory.subcategory_name}</option>
+                    `;
+                    });
+
+                    // Clear child category dropdown
+                    const childcategoryDropdown = document.getElementById('childategory_id');
+                    childcategoryDropdown.innerHTML = '<option value="">Select Childcategory</option>';
+                });
+        });
+
+        // Fetch and update child categories when subcategory changes
+        document.getElementById('subcategory_id').addEventListener('change', function() {
+            const subcategoryId = this.value;
+
+            fetch(`/get-childcategories/${subcategoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const childcategoryDropdown = document.getElementById('childategory_id');
+                    childcategoryDropdown.innerHTML = '<option value="">Select Childcategory</option>';
+
+                    data.childcategories.forEach(childcategory => {
+                        childcategoryDropdown.innerHTML += `
+                        <option value="${childcategory.id}">${childcategory.childcategory_name}</option>
+                    `;
+                    });
+                });
+        });
+    </script>
 @endsection

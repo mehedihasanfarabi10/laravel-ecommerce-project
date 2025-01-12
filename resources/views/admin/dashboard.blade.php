@@ -2,28 +2,11 @@
 
 @section('title', 'Dashboard')
 
-  
-
 @section('content')
-
-    {{--  Main Content  --}}
-
-    <div class="d-flex align-items-stretch">
-
-        {{--  Body  --}}
-
-        <div class="d-flex align-items-stretch" style="width: 100%;">
-            @include('admin.includes.maindashboard')
-        </div>
-
-        {{--  Body End  --}}
+    <div id="main-content">
+        @include('admin.includes.maindashboard')
     </div>
-
-    @include('admin.includes.footer') 
-
-
-
-    {{-- End  Main Content  --}}
-
-
 @endsection
+
+
+

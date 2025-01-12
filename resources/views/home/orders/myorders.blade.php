@@ -63,7 +63,7 @@
                         <td>${{ number_format($order->price * $order->quantity, 2) }}</td>
                         <td>{{ $order->quantity ?? 'N/A' }}</td>
                         <td>
-                            <img src="/products/{{ $order->product->image }}" alt="{{ $order->product->title }}"
+                            <img src="/products/{{ $order->product->image ?? '' }}" alt="{{ $order->product->title ?? '' }}"
                                 class="product-image">
                         </td>
                         <td>{{ $order->size  }}

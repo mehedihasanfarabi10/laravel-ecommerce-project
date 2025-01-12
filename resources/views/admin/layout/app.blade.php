@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') :: Admin</title>
-
+  
     <!-- Bootstrap & Font Awesome -->
     <link rel="stylesheet" href="{{ asset('admincss/vendor/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admincss/vendor/font-awesome/css/font-awesome.min.css') }}">
@@ -16,7 +16,7 @@
 
     <!-- Toastr -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-  
+
     <link rel="shortcut icon" href="images/amazon.png" type="image/x-icon">
 
     <style>
@@ -48,26 +48,26 @@
 
         <!-- Main Content Area (Full Width) -->
         <div class="d-flex flex-column" style="width: 100%;">
-            <div class="d-flex flex-column">
-                @yield('content')
+            <div class="d-flex flex-column" >
+                @yield('content') 
             </div>
 
 
-           
+
 
         </div>
 
         {{--  @include('admin.includes.footer')  --}}
 
-        <div >
-          
-                @yield('footer')
-            </div>
+        <div>
 
-
-           
-
+            @yield('footer')
         </div>
+
+
+
+
+    </div>
 
 
 
@@ -82,10 +82,22 @@
 
 
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
     <script src="{{ asset('admincss/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('admincss/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    
+    
+   
+
 
     <script>
         function confirmation(event) {

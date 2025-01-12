@@ -90,7 +90,7 @@
         {{--  Body End  --}}
     </div>
 
-    @include('admin.includes.footer') 
+    {{--  @include('admin.includes.footer')   --}}
 
 
 

@@ -220,7 +220,7 @@
         }
 
         .review-item .rating-stars .star.filled {
-            color: #f5c518;
+            color: #ff3700;
         }
 
         .review-item strong {
@@ -276,7 +276,10 @@
         <div class="product-details">
             <div class="product-title">{{ $product->title }}</div>
             <div class="product-price">${{ number_format($product->price, 2) }}</div>
-            <div class="product-category">Category: {{ $product->category }}</div>
+            <div class="product-category">Category: {{ $product->categories->category_name ?? 'No category assigned' }} >
+                {{ $product->subcategory->subcategory_name ?? 'No subcategory assigned' }} >
+                {{ $product->childcategory->childcategory_name ?? 'No childcategory assigned' }}
+            </div>
             <div class="product-description">Description: {{ $product->description }}</div>
             <div class="product-description">Quantity: {{ $product->quantity }}</div>
 
@@ -357,7 +360,12 @@
 
     </div>
 
-
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
 
     <div class="review-handle d-flex flex-wrap">
@@ -368,8 +376,8 @@
                 @csrf
                 <div class="mb-3">
                     <label for="name" class="form-label">Your Name:</label>
-                    <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name"
-                        required>
+                    <input type="text" id="name" name="name" class="form-control"
+                        value="{{ Auth::user()->name }}" placeholder="Enter your name" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="rating" class="form-label">Rating:</label>
