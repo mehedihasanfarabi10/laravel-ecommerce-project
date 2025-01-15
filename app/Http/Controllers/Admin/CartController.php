@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -104,7 +105,9 @@ class CartController extends Controller
 
         $cart = Cart::where('user_id', $userid)->get();
 
-        return view('home.orders.mycart', compact('count', 'cart'));
+        $address = Address::where('user_id', $user->id)->first();
+
+        return view('home.orders.mycart', compact('count', 'cart','address'));
     }
 
     public function remove($id)

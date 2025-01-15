@@ -42,7 +42,7 @@
                 <tr>
 
                     <th>Product</th>
-                   
+                    <th>Order Number</th>
                     <th>Total Price</th>
                     <th>Quantity</th>
                     <th>Image</th>

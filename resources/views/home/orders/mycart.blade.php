@@ -216,6 +216,67 @@
         display: grid;
         gap: 10px;
     }
+
+    {{--  Address Box  --}} .address-box {
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        max-width: 400px;
+        margin: 20px auto;
+    }
+
+    .address-box h3 {
+        margin-bottom: 10px;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .address-box p {
+        margin: 0 0 15px;
+        line-height: 1.6;
+        color: #555;
+    }
+
+    .address-box a.edit-button {
+        display: inline-block;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: #fff;
+        background-color: #007bff;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+
+    .address-box a.edit-button:hover {
+        background-color: #0056b3;
+    }
+
+    .address-header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 0 10px;
+    }
+
+    .address-header h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .edit-button {
+        padding: 8px 16px;
+        font-size: 14px;
+        color: #fff;
+        background-color: #28a745;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    {{--  Address Box End --}}
 </style>
 
 @section('content')
@@ -275,9 +336,48 @@
 
         <!-- Order Form -->
         <div class="order-form-container">
+            <!-- Address Box -->
+
             <h2>Place Your Order</h2>
             <form action="{{ url('place_order') }}" method="POST">
                 @csrf
+                <div class="address-box">
+                    <h3>Shipping Address</h3>
+
+                    @if ($address)
+                        <!-- Checkbox to select the address -->
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="use_address" name="use_address"
+                                value="1" checked>
+                            <label class="form-check-label" for="use_address">
+                                Use this shipping address
+                            </label>
+                        </div>
+                        <p>
+                            <strong>{{ $address->first_name }} {{ $address->last_name }}</strong><br>
+                            {{ $address->street_address }}<br>
+                            {{ $address->district }} City<br>
+                            {{ $address->country }}<br>
+                            {{ $address->postcode ?? 'N/A' }}<br>
+                        </p>
+
+
+
+                        <!-- Hidden inputs to pass address data -->
+                        <input type="hidden" name="shipping_address[first_name]" value="{{ $address->first_name }}">
+                        <input type="hidden" name="shipping_address[last_name]" value="{{ $address->last_name }}">
+                        <input type="hidden" name="shipping_address[street_address]"
+                            value="{{ $address->street_address }}">
+                        <input type="hidden" name="shipping_address[district]" value="{{ $address->district }}">
+                        <input type="hidden" name="shipping_address[country]" value="{{ $address->country }}">
+                        <input type="hidden" name="shipping_address[postcode]" value="{{ $address->postcode ?? 'N/A' }}">
+
+                        <a href="#" class="edit-button" onclick="openEditModal()">Edit Address</a>
+                    @else
+                        <p>You have not added a shipping address yet.</p>
+                        <a href="{{ route('user.profile') }}" class="edit-button">Add Address</a>
+                    @endif
+                </div>
                 <!-- Receiver Name -->
                 <div class="mb-3">
                     <label for="receiverName" class="form-label">Receiver Name</label>
@@ -320,35 +420,39 @@
 @section('script')
     <script>
         document.querySelectorAll('.cart-quantity').forEach(input => {
-            input.addEventListener('change', function () {
+            input.addEventListener('change', function() {
                 const cartId = this.getAttribute('data-id');
                 const newQuantity = this.value;
-        
+
                 fetch(`/update-cart/${cartId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ quantity: newQuantity })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const cartRow = this.closest('tr');
-                        const priceCell = cartRow.querySelector('.cart-price').textContent.replace('$', '');
-                        const newTotal = (parseFloat(priceCell) * newQuantity).toFixed(2);
-                        cartRow.querySelector('.cart-total').textContent = `$${newTotal}`;
-        
-                        // Update the total cart price
-                        updateCartTotal();
-                    } else {
-                        alert(data.message);
-                    }
-                });
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            quantity: newQuantity
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const cartRow = this.closest('tr');
+                            const priceCell = cartRow.querySelector('.cart-price').textContent.replace(
+                                '$', '');
+                            const newTotal = (parseFloat(priceCell) * newQuantity).toFixed(2);
+                            cartRow.querySelector('.cart-total').textContent = `$${newTotal}`;
+
+                            // Update the total cart price
+                            updateCartTotal();
+                        } else {
+                            alert(data.message);
+                        }
+                    });
             });
         });
-        
+
         function updateCartTotal() {
             let total = 0;
             document.querySelectorAll('.cart-total').forEach(totalCell => {
@@ -356,7 +460,7 @@
             });
             document.getElementById('cart-total').textContent = total.toFixed(2);
         }
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             const cartRows = document.querySelectorAll('.cart-table tbody tr');
             const cartTotalDisplay = document.getElementById('cart-total');

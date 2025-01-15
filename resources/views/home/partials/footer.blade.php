@@ -1,18 +1,22 @@
 
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
 <section class="info_section  layout_padding2-top">
     <div class="social_container">
       <div class="social_box">
         <a href="">
-          <i class="fa fa-facebook" aria-hidden="true"></i>
+          <i class="fa-brands fa-facebook"></i>
         </a>
         <a href="">
-          <i class="fa fa-twitter" aria-hidden="true"></i>
+          <i class="fa-brands fa-twitter"></i>
         </a>
         <a href="">
-          <i class="fa fa-instagram" aria-hidden="true"></i>
+          <i class="fa-brands fa-linkedin"></i>
         </a>
         <a href="">
-          <i class="fa fa-youtube" aria-hidden="true"></i>
+          <i class="fa-brands fa-github"></i>
         </a>
       </div>
     </div>
@@ -20,7 +24,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-6 col-lg-3">
-            <h6>
+            <h6 style="color: rgb(0, 0, 0)!important;">
               ABOUT US
             </h6>
             <p>
@@ -29,7 +33,7 @@
           </div>
           <div class="col-md-6 col-lg-3">
             <div class="info_form ">
-              <h5>
+              <h5 style="color: rgb(9, 9, 9)!important;">
                 Newsletter
               </h5>
               <form action="#">
@@ -41,7 +45,7 @@
             </div>
           </div>
           <div class="col-md-6 col-lg-3">
-            <h6>
+            <h6 style="color: rgb(0, 0, 0)!important;">
               NEED HELP
             </h6>
             <p>
@@ -49,7 +53,7 @@
             </p>
           </div>
           <div class="col-md-6 col-lg-3">
-            <h6>
+            <h6 style="color: rgb(0, 0, 0)!important;">
               CONTACT US
             </h6>
             <div class="info_link-box">

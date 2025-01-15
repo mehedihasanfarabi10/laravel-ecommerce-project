@@ -3,17 +3,18 @@
 // use App\Http\Controllers\Admin\CartController;
 // use App\Http\Controllers\Home\PageController;
 
-use App\Http\Controllers\Admin\BrandController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\SizeController;
 // use App\Http\Controllers\Admin\OrderController;
 // use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\SizeController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\StripeController;
+use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\CategoryController;
 
 Route::controller(StripeController::class)->group(function(){
@@ -51,10 +52,17 @@ Route::get('/dashboard',[HomeController::class,'login_home'])->middleware(['auth
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/user/profile', [ProfileController::class, 'index'])->name('user.profile');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Shipping Address
+
+// Route::get('/customer/shippingaddress/edit/{id}',[AddressController::class,'edit'])->middleware('auth')->name('customer.address.edit');
+Route::post('/customer/shippingaddress/update/{id}',[AddressController::class,'update'])->middleware('auth')->name('customer.address.update');
+Route::post('/customer/shippingaddress/store',[AddressController::class,'store'])->middleware('auth')->name('customer.shippingaddress.store');
 
 require __DIR__.'/auth.php';
 

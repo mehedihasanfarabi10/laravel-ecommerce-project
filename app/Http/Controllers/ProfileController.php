@@ -2,18 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\Address;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\ProfileUpdateRequest;
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
      */
+    public function index(){
+
+        if (Auth::id()) {
+
+            $user = Auth::user();
+
+            $userid = $user->id;
+
+            $count = Cart::where('user_id', $userid)->count();
+        } else {
+            $count = '';
+        }
+
+        $user = Auth::user()->id;
+
+
+
+        // Fetch orders with related cart, size, and color details
+        $orders = Order::where('user_id', $user)
+            ->with(['product']) // Eager-load size and color via cart
+            ->get();
+
+            $address = Address::where('user_id', Auth::id())->first();
+
+        return view('home.customer.dashboard',compact('orders','count','user','address'));
+    }
+
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [

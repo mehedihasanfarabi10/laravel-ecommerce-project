@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('rec_address')->nullable();
             $table->string('phone')->nullable();
+            $table->string('order_number')->nullable();
             $table->string('size')->nullable();
             $table->string('color')->nullable();
             $table->string('status')->default('in progress');

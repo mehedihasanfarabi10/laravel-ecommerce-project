@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -88,11 +89,11 @@ class OrderController extends Controller
         $pdf->setPaper('A4', 'portrait');
         $pdf->setOption('isHtml5ParserEnabled', true);
         $pdf->setOption('isRemoteEnabled', true);
-        
+
         // Download the generated PDF
         return $pdf->download('invoice_' . $order->id . '.pdf');
 
-        
+
         // return $pdf->download('invoices.pdf');
     }
 
@@ -110,6 +111,32 @@ class OrderController extends Controller
 
     public function place_order(Request $request)
     {
+
+        // Check if the shipping address is present in the request
+        $shippingAddress = $request->input('shipping_address', []);
+
+        // If shipping address is not empty, proceed
+        if ($request->has('use_address') && $request->use_address) {
+            // Prepare the shipping details as an array
+            $shippingDetails = [
+                'first_name' => $shippingAddress['first_name'] ?? null,
+                'last_name' => $shippingAddress['last_name'] ?? null,
+                'street_address' => $shippingAddress['street_address'] ?? null,
+                'district' => $shippingAddress['district'] ?? null,
+                'country' => $shippingAddress['country'] ?? null,
+                'postcode' => $shippingAddress['postcode'] ?? 'N/A',
+            ];
+        } else {
+            // If shipping address is missing, set default values or handle the case
+            $shippingDetails = [
+                'first_name' => 'N/A',
+                'last_name' => 'N/A',
+                'street_address' => 'N/A',
+                'district' => 'N/A',
+                'country' => 'N/A',
+                'postcode' => 'N/A',
+            ];
+        }
         $name = $request->receiver_name;
         $address = $request->receiver_address;
         $phone = $request->phone;
@@ -124,9 +151,22 @@ class OrderController extends Controller
             $order->name = $name;
             $order->rec_address = $address;
             $order->phone = $phone;
+
+            $date = now()->format('dmY'); // Format: ddmmyyyy
+
+            // Generate a random unique identifier or sequential number
+            $uniqueId = Str::random(6); // 7 random characters (adjust length as needed)
+            $uniqueNumber = rand(100000, 999999); // Generates a random number between 1000000 and 9999999
+            // Combine them into the order number
+            $orderNumber = '#' . strtoupper($uniqueId) . '_' . $date . '_' . $uniqueNumber; // Uppercase for consistency
+            $order->order_number = $orderNumber;
+
+            // Store the shipping details as a JSON object
+            $order->shipping_details = json_encode($shippingDetails);
+
             $order->price = $carts->product->price; // Current product price
             // Calculate total price
- // Assuming a `price` column exists in the `products` table
+            // Assuming a `price` column exists in the `products` table
             $order->quantity = $carts->quantity; // Assuming a `quantity` column exists in the `cart` table
             $order->size = $carts->size;
             $order->color = $carts->color;

@@ -3,14 +3,15 @@
 <body>
     <style>
         /* General Page Styling */
-        .page-header {
+        .header {
             text-align: center;
             margin-bottom: 30px;
         }
 
         .page-header h3 {
-            color: crimson;
+            color: rgb(24, 21, 22);
             font-weight: bold;
+            background-color: white;
         }
 
         /* Form container styling */
@@ -131,7 +132,7 @@
 </body>
 
 @section('content')
-    <div class="page-header">
+    <div class="header">
         <h3>Add Product</h3>
     </div>
 
@@ -164,9 +165,14 @@
             </div>
 
             <!-- Product Price -->
-            <div>
+            <div
+                style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px;">
                 <label>Product Price:</label>
                 <input type="number" name="price" placeholder="Enter product price" step="0.01" required>
+
+                <!-- Product Quantity -->
+                <label>Product Quantity:</label>
+                <input type="number" name="quantity" placeholder="Enter quantity" required>
             </div>
 
             <!-- Product Category -->
@@ -195,17 +201,17 @@
 
                 <!-- Product Subcategory -->
 
-                <label>Select Subcategory:</label>
+                <label> Subcategory:</label>
                 <select name="subcategory_id" id="subcategory_id" required>
-                    <option value="">Select Subcategory</option>
+                    <option value=""> Subcategory</option>
                     @foreach ($subcategory as $sub)
                         <option value="{{ $sub->id }}">{{ $sub->subcategory_name }}</option>
                     @endforeach
                 </select>
 
-                <!-- Product Subcategory -->
+                <!-- Product Childcategory -->
 
-                <label>Select Subcategory:</label>
+                <label> Childcategory:</label>
                 <select name="childcategory_id" id="childategory_id" required>
                     <option value="">Select Childcategory</option>
                     @foreach ($childcategories as $child)
@@ -239,12 +245,6 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
-
-            <!-- Product Quantity -->
-            <div>
-                <label>Product Quantity:</label>
-                <input type="number" name="quantity" placeholder="Enter quantity" required>
             </div>
 
             <!-- Product Options -->
