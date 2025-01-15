@@ -9,12 +9,12 @@
         "barryvdh/laravel-dompdf": "^3.0",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "php-flasher/flasher": "*",
         "php-flasher/flasher-laravel": "^2.1",
         "php-flasher/flasher-sweetalert-laravel": "^2.1",
         "php-flasher/flasher-toastr-laravel": "^2.1",
         "php-flasher/flasher-toastr-symfony": "^2.1",
-        "stripe/stripe-php": "^16.3",
-        "yajra/laravel-datatables": "11.0"
+        "stripe/stripe-php": "^16.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
