@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Http\\Controllers\\AdminController' => $baseDir . '/app/Http/Controllers/AdminController.php',
+    'App\\Http\\Controllers\\Admin\\AddressController' => $baseDir . '/app/Http/Controllers/Admin/AddressController.php',
     'App\\Http\\Controllers\\Admin\\BrandController' => $baseDir . '/app/Http/Controllers/Admin/BrandController.php',
     'App\\Http\\Controllers\\Admin\\CartController' => $baseDir . '/app/Http/Controllers/Admin/CartController.php',
     'App\\Http\\Controllers\\Admin\\CategoryController' => $baseDir . '/app/Http/Controllers/Admin/CategoryController.php',
@@ -34,6 +35,7 @@ return array(
     'App\\Http\\Middleware\\Admin' => $baseDir . '/app/Http/Middleware/Admin.php',
     'App\\Http\\Requests\\Auth\\LoginRequest' => $baseDir . '/app/Http/Requests/Auth/LoginRequest.php',
     'App\\Http\\Requests\\ProfileUpdateRequest' => $baseDir . '/app/Http/Requests/ProfileUpdateRequest.php',
+    'App\\Models\\Address' => $baseDir . '/app/Models/Address.php',
     'App\\Models\\Brand' => $baseDir . '/app/Models/Brand.php',
     'App\\Models\\Cart' => $baseDir . '/app/Models/Cart.php',
     'App\\Models\\Category' => $baseDir . '/app/Models/Category.php',
@@ -2642,6 +2644,7 @@ return array(
     'Illuminate\\Validation\\Rules\\Can' => $vendorDir . '/laravel/framework/src/Illuminate/Validation/Rules/Can.php',
     'Illuminate\\Validation\\Rules\\DatabaseRule' => $vendorDir . '/laravel/framework/src/Illuminate/Validation/Rules/DatabaseRule.php',
     'Illuminate\\Validation\\Rules\\Dimensions' => $vendorDir . '/laravel/framework/src/Illuminate/Validation/Rules/Dimensions.php',
+    'Illuminate\\Validation\\Rules\\Email' => $vendorDir . '/laravel/framework/src/Illuminate/Validation/Rules/Email.php',
     'Illuminate\\Validation\\Rules\\Enum' => $vendorDir . '/laravel/framework/src/Illuminate/Validation/Rules/Enum.php',
     'Illuminate\\Validation\\Rules\\ExcludeIf' => $vendorDir . '/laravel/framework/src/Illuminate/Validation/Rules/ExcludeIf.php',
     'Illuminate\\Validation\\Rules\\Exists' => $vendorDir . '/laravel/framework/src/Illuminate/Validation/Rules/Exists.php',
