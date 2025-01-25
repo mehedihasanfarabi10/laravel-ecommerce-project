@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Wishlist;
 
 class ProfileController extends Controller
 {
@@ -33,6 +34,12 @@ class ProfileController extends Controller
 
         $user = Auth::user()->id;
 
+        // $user = Auth::user();
+
+        // $userid = $user->id;
+
+        $wishlistItems = Wishlist::with('product')->where('user_id', $user)->get();
+
 
 
         // Fetch orders with related cart, size, and color details
@@ -42,7 +49,7 @@ class ProfileController extends Controller
 
             $address = Address::where('user_id', Auth::id())->first();
 
-        return view('home.customer.dashboard',compact('orders','count','user','address'));
+        return view('home.customer.dashboard',compact('orders','wishlistItems','count','user','address'));
     }
 
 

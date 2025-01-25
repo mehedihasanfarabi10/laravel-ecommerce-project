@@ -136,7 +136,7 @@
         <h3>Add Product</h3>
     </div>
 
-    <div class="form-container">
+    <div class="form-container" style="width: 80%;">
         <form action="{{ url('upload_product') }}" method="post" enctype="multipart/form-data">
             @csrf
 
@@ -166,6 +166,7 @@
 
             <!-- Product Price -->
             <div
+                class="mt-4 mb-3"
                 style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px;">
                 <label>Product Price:</label>
                 <input type="number" name="price" placeholder="Enter product price" step="0.01" required>
@@ -173,6 +174,15 @@
                 <!-- Product Quantity -->
                 <label>Product Quantity:</label>
                 <input type="number" name="quantity" placeholder="Enter quantity" required>
+
+                {{--  Brand  --}}
+                <label> Brands:</label>
+                <select name="brand_id" id="brand_id" required>
+                    <option value="">Select Brands</option>
+                    @foreach ($brands as $brand)
+                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                    @endforeach
+                </select>
             </div>
 
             <!-- Product Category -->
@@ -187,6 +197,7 @@
                     </div> -->  --}}
 
             <div
+            class="mt-4 mb-3"
                 style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px;">
 
 
@@ -221,9 +232,9 @@
             </div>
 
             <!-- Sizes -->
-            <div>
+            <div class="d-flex inline-block mt-3 mb-4" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px;">
                 <label>Available Sizes:</label>
-                <div class="multi-group">
+                <div class="multi-group" style="border: 1px solid #555;">
                     @foreach ($size as $s)
                         <div class="form-check">
                             <input type="checkbox" name="sizes[]" value="{{ $s->size }}" id="size_{{ $s->id }}">
@@ -231,12 +242,12 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
 
-            <!-- Colors -->
-            <div>
+                <hr/>
+                <!-- Colors -->
+
                 <label>Available Colors:</label>
-                <div class="multi-group">
+                <div class="multi-group" style="border: 1px solid #555;">
                     @foreach ($color as $c)
                         <div class="form-check">
                             <input type="checkbox" name="colors[]" value="{{ $c->color }}"

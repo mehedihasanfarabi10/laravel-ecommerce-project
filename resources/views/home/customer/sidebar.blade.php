@@ -249,6 +249,118 @@
 
 
         {{--  Modal End  --}}
+
+        {{--  Wishlist  --}}
+
+         /* Container for the product card */
+         .card {
+            border: 1px solid #ddd;
+            
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            background-color: #fff;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Product image */
+        .card img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        /* Card body */
+        .card-body {
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #333;
+        }
+
+        .card-text {
+            color: #ff5722;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Action buttons container */
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Add to Cart button */
+        .btn-add-to-cart {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: #218838;
+        }
+
+        /* Remove button */
+        .btn-remove {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-remove:hover {
+            background-color: #c82333;
+        }
+
+        /* Empty wishlist styling */
+        .empty-wishlist {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .empty-wishlist p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .empty-wishlist .btn-primary {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+
+        .empty-wishlist .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        {{--  Wishlist End --}}
     </style>
 </head>
 
@@ -293,12 +405,12 @@
                         <tr>
 
                             <th>Product</th>
-
+                            <th>Order Number</th>
                             <th>Total Price</th>
                             <th>Quantity</th>
                             <th>Image</th>
-                            <th>Size </th>
-                            <th>Color </th>
+                            {{--  <th>Size </th>
+                            <th>Color </th>  --}}
                             <th>Payment Status</th>
                             <th>Status</th>
                             <th>Print</th>
@@ -311,15 +423,16 @@
                         @foreach ($orders as $order)
                             <tr>
                                 <td>{{ $order->product->title ?? 'N/A' }}</td>
+                                <td>{{ $order->order_number ?? 'N/A' }}</td>
                                 <td>${{ number_format($order->price * $order->quantity, 2) }}</td>
                                 <td>{{ $order->quantity ?? 'N/A' }}</td>
                                 <td>
                                     <img src="/products/{{ $order->product->image ?? '' }}"
                                         alt="{{ $order->product->title ?? '' }}" class="product-image">
                                 </td>
-                                <td>{{ $order->size }}
+                                {{--  <td>{{ $order->size }}
                                 </td> <!-- Display size name -->
-                                <td>{{ $order->color }}
+                                <td>{{ $order->color }}  --}}
                                 </td> <!-- Display color name -->
 
                                 <td>{{ $order->payment_status }}</td>
@@ -349,7 +462,7 @@
             {{--  Address  --}}
             <div id="addresses" class="content-section" style="display: none;">
                 <div class="address-header">
-                  
+
                     {{--  <a href="{{ route('customer.address.create') }}" class="edit-button"> Add Address <i class="fa-solid fa-plus"></i></a>  --}}
                 </div>
 
@@ -364,7 +477,8 @@
                     </div>
                 @else
                     <!-- Show the saved address -->
-                    <span style="color: #000000!important;">The following addresses will be used on the checkout page by default.</span>
+                    <span style="color: #000000!important;">The following addresses will be used on the checkout page by
+                        default.</span>
                     <div class="address-box">
                         <h3>Billing Address</h3>
                         <p>
@@ -467,10 +581,65 @@
             <div id="account-details" class="content-section" style="display: none;">
                 <h2>Account Details</h2>
                 <p>Update your personal information and password.</p>
+
+                <form action="{{route('user.update')}}" method="POST">
+                    @csrf
+                    <label for="user_name">Name : </label>
+                    <input type="text" name="user_name" value="{{Auth::user()->name}}" required></input>
+                    <label for="user_email">Email : </label>
+                    <input type="text" style="background-color: #a9adb0;" name="user_email" value="{{Auth::user()->email}}" readonly></input>
+                    <label for="user_phone">Phone : </label>
+                    <input type="text" name="user_phone" value="{{Auth::user()->phone}}" required></input>
+                    <label for="user_address">Address : </label>
+                    <textarea type="text" name="user_address" value="{{Auth::user()->address}}" required>{{Auth::user()->address}}</textarea>
+                   <div  style="align-items: center; justify-content:center;">
+                    <input type="submit"  class="btn btn-info mt-2" value="Update Info"></input>
+                   </div>
+                </form>
+                <div class="flex items-center justify-between mt-4">
+                        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            href="{{ route('password.request') }}">
+                            {{ __('Reset your password?') }}
+                        </a>
+    
+                    
+                </div>
             </div>
             <div id="wishlist" class="content-section" style="display: none;">
                 <h2>Your Wishlist</h2>
                 <p>Save your favorite products for later.</p>
+                <div class="row" >
+                    @foreach ($wishlistItems as $item)
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <!-- Product Image -->
+                                <img src="{{ asset('products/' . $item->product->image) }}" alt="{{ $item->product->title }}">
+    
+                                <!-- Product Info -->
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ $item->product->title }}</h5>
+                                    <p class="card-text">${{ $item->product->price }}</p>
+                                </div>
+    
+                                <!-- Action Buttons -->
+                                <div class="card-actions">
+                                    <!-- Add to Cart Button -->
+                                    <form action="{{ route('add.cart', $item->product->id) }}" method="GET" class="me-2">
+                                        @csrf
+                                        <button type="submit" class="btn-add-to-cart">Add to Cart</button>
+                                    </form>
+    
+                                    <!-- Remove from Wishlist Button -->
+                                    <form action="{{ route('wishlist.delete', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn-remove">Remove</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>

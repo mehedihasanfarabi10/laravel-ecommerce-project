@@ -60,6 +60,7 @@
                 @foreach ($orders as $order)
                     <tr>
                         <td>{{ $order->product->title ?? 'N/A' }}</td>
+                        <td>{{$order->order_number}}</td>
                         <td>${{ number_format($order->price * $order->quantity, 2) }}</td>
                         <td>{{ $order->quantity ?? 'N/A' }}</td>
                         <td>

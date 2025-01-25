@@ -35,7 +35,7 @@
                 </thead>
                 <tbody>
                     @forelse($sellers as $seller)
-                        <tr>
+                        <tr style="background-color: white;color:black;">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $seller->name }}</td>
                             <td>{{ $seller->email }}</td>

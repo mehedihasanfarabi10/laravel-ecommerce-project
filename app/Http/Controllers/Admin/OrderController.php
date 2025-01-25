@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Wishlist;
+use Illuminate\Support\Str;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class OrderController extends Controller
 {
@@ -176,6 +178,14 @@ class OrderController extends Controller
             $order->save();
         }
 
+        // When User Place a Order then also make a notification
+
+        // Add notification for admin
+        Notification::create([
+            'title' => 'New Order Placed',
+            'message' => 'A new order has been placed by ' . $request->user()->name.'. Order Number is '.$order->order_number,
+        ]);
+
         $cart_remove = Cart::where('user_id', $userid)->get();
 
         foreach ($cart_remove as $remove) {
@@ -195,7 +205,10 @@ class OrderController extends Controller
 
         $search = $request->search;
         // viewproduct e je variable use kora hoyece setai use korte hobe productData
-        $orders = Order::where('phone', 'LIKE', '%' . $search . '%')->orWhere('name', 'LIKE', '%' . $search . '%')->paginate(10);
+        $orders = Order::where('phone', 'LIKE', '%' . $search . '%')
+                        ->orWhere('name', 'LIKE', '%' . $search . '%')
+                        ->orWhere('order_number', 'LIKE', '%' . $search . '%')
+                        ->paginate(10);
 
         return view('admin.pages.orders', compact('orders'));
     }
@@ -215,6 +228,8 @@ class OrderController extends Controller
         }
 
         $user = Auth::user()->id;
+
+
 
         // $orders = Order::where('user_id', $user)
         //     ->whereHas('product') // Ensures only orders with valid products are fetched
@@ -239,5 +254,30 @@ class OrderController extends Controller
             ->get();
 
         return view('home.orders.myorders', compact('count', 'orders'));
+    }
+
+
+
+    public function tracking(Request $request)
+    {
+
+
+        return view('home.pages.trackings');
+    }
+    public function track_order(Request $request)
+    {
+        $search = $request->search;
+
+        // If no search query, pass an empty collection
+        if (empty($search)) {
+            $orders = collect(); // Empty collection
+        } else {
+            // Fetch orders based on the search query
+            $orders = Order::where('order_number', 'LIKE', '%' . $search . '%')
+                ->orWhere('phone', 'LIKE', '%' . $search . '%')
+                ->paginate(10);
+        }
+
+        return view('home.pages.track_order', compact('orders'));
     }
 }

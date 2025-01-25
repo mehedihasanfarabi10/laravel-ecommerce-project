@@ -18,6 +18,10 @@
         .product-box:hover {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+        {{--  .product-box:hover .wishlist-icon {
+            display: block;
+        }
+          --}}
 
         .img-box {
             position: relative;
@@ -74,6 +78,8 @@
             height: 30px;
             z-index: 1;
         }
+
+        
     </style>
 </head>
 
@@ -266,8 +272,9 @@
                 <div class="row">
                     @foreach ($hotDeals as $product)
                         <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                            {{--  STart Box  --}}
                             <div class="product-box"
-                                style="border: 1px solid #ddd; border-radius: 5px; overflow: hidden; transition: box-shadow 0.3s; padding: 15px; background: #fff;">
+                                style="border: 1px solid #ddd; border-radius: 5px; overflow: hidden; transition: box-shadow 0.3s; padding: 15px; background: #fff; position: relative;">
                                 <a href="{{ url('product_details', $product->id) }}"
                                     style="text-decoration: none; color: inherit;">
                                     <div class="img-box text-center" style="position: relative;">
@@ -280,33 +287,46 @@
                                             </span>
                                         @endif
                                     </div>
-                                    <div class="detail-box mt-3" style="text-align: center;">
-                                        <h6 style="font-size: 16px; font-weight: bold;">{{ $product->title }}</h6>
-                                        <h6 style="font-size: 14px; color: #db4566;">
-                                            <span
-                                                style="text-decoration: line-through; color: #999;">$750{{ $product->original_price }}</span>
-                                            <span>${{ $product->price }}</span>
-                                        </h6>
-                                    </div>
                                 </a>
+                                <div class="wishlist-icon"
+                                    style="position: absolute; top: 10px; right: 10px; cursor: pointer; display: block;">
+                                   <form action="{{route('wishlist.add')}}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <button type="submit"
+                                        class="add-to-wishlist" style="border: #fff;">
+                                        <i class="fas fa-heart" style="color: #db4566; font-size: 20px; cursor: pointer;"></i>
+
+                                    </button>
+                                   </form>
+                                </div>
+                                <div class="detail-box mt-3" style="text-align: center;">
+                                    <h6 style="font-size: 16px; font-weight: bold;">{{ $product->title }}</h6>
+                                    <h6 style="font-size: 14px; color: #db4566;">
+                                        <span
+                                            style="text-decoration: line-through; color: #999;">$750{{ $product->original_price }}</span>
+                                        <span>${{ $product->price }}</span>
+                                    </h6>
+                                </div>
                                 <div class="text-center mt-3">
-                                    {{--  <a class="btn btn-sm btn-primary"
-                                style="background-color: #db4566; color: white; margin-right: 5px;"
-                                href="{{ url('product_details', $product->id) }}">
-                                View Product
-                            </a>  --}}
                                     <a class="btn btn-sm btn-primary view-product-btn"
                                         style="background-color: #db4566; color: white; margin-right: 5px;"
                                         data-id="{{ $product->id }}">
                                         View Product
                                     </a>
-
+    
+                                    {{--  <a class="btn btn-sm btn-primary"
+                                        style="background-color: #db4566; color: white; margin-right: 5px;"
+                                        href="{{ url('product_details', $product->id) }}">
+                                        View Product
+                                    </a>  --}}
                                     <a class="btn btn-sm btn-success" style="background-color: #5ecdec; color: white;"
                                         href="{{ url('add_to_cart', $product->id) }}">
                                         Add to Cart
                                     </a>
                                 </div>
                             </div>
+                            {{--  End Box  --}}
                         </div>
                     @endforeach
                 </div>
@@ -322,12 +342,12 @@
 </section>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- Slick JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
 
-    <script>
+<script>
     $(document).on('click', '.view-product-btn', function(e) {
         e.preventDefault();
         const productId = $(this).data('id');
@@ -356,7 +376,34 @@
     });
 </script>
 
-    {{--  <script>
+    <script>
+        document.querySelectorAll('.add-to-wishlist').forEach(item => {
+            item.addEventListener('click', function () {
+                const productId = this.getAttribute('data-id');
+        
+                fetch('{{ route('wishlist.add') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ product_id: productId }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.success);
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            });
+        });
+        
+    </script>
+
+{{--  <script>
         $(document).on('click','view-details-button',function(e){
             e.preventDefault();
 

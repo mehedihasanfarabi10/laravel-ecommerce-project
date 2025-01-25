@@ -25,20 +25,28 @@ return new class extends Migration
             $table->boolean('is_featured')->default(false);
             $table->boolean('is_hot_deal')->default(false);
             $table->string('collection')->nullable();
-    
+
             // Removed the 'after' part
+            $table->unsignedBigInteger('brand_id')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
-        
-    
-            // Add foreign key constraints
+
+            $table->unsignedBigInteger('subcategory_id')->nullable();
+            $table->unsignedBigInteger('childcategory_id')->nullable();
+
+
+            $table->foreign('brand_id')->references('id')->on('brands')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-           
+            $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
+            $table->foreign('childcategory_id')->references('id')->on('childcategories')->onDelete('cascade');
+
+
+
             $table->softDeletes();
-    
+
             $table->timestamps();
         });
     }
-    
+
 
     /**
      * Reverse the migrations.

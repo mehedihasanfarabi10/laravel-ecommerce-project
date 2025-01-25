@@ -8,12 +8,14 @@ use App\Models\Review;
 use App\Models\Product;
 use App\Models\Category;
 
+use App\Models\Wishlist;
 use App\Models\ProductSize;
 use App\Models\Subcategory;
 use App\Models\ProductColor;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\ChildCategory;
+use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
@@ -34,9 +36,11 @@ class ProductController extends Controller
 
         $childcategories = ChildCategory::all();
 
+        $brands = Brand::all();
+
         $product = new Product;
 
-        return view('admin.product.create', compact('category', 'childcategories', 'size', 'color', 'product', 'subcategory'));
+        return view('admin.product.create', compact('category','brands', 'childcategories', 'size', 'color', 'product', 'subcategory'));
     }
 
     public function upload_product(Request $request)
@@ -94,6 +98,7 @@ class ProductController extends Controller
 
         $product->gallery_images = $fileNameToStore;
         $product->price = $request->price;
+        $product->brand_id = $request->brand_id;
         // Set category, subcategory, and childcategory
         $product->category_id = $request->category_id;
         $product->subcategory_id = $request->subcategory_id;
@@ -193,6 +198,7 @@ class ProductController extends Controller
 
 
         $subcategory = Subcategory::all();
+        $brands = Brand::all();
 
         $childcategories= ChildCategory::all();
 
@@ -200,7 +206,7 @@ class ProductController extends Controller
         $product->size = is_string($product->size) ? json_decode($product->size, true) : $product->size;
         $product->color = is_string($product->color) ? json_decode($product->color, true) : $product->color;
 
-        return view('admin.product.edit', compact('product', 'category','childcategories','subcategory', 'size', 'color'));
+        return view('admin.product.edit', compact('product', 'brands','category','childcategories','subcategory', 'size', 'color'));
     }
     public function update_product(Request $request, $id)
     {
@@ -209,6 +215,7 @@ class ProductController extends Controller
         $product->title = $request->title;
         $product->description = $request->description;
         $product->price = $request->price;
+        $product->brand_id = $request->brand_id;
         $product->quantity = $request->quantity;
         $product->category_id = $request->category_id;
         $product->subcategory_id = $request->subcategory_id;
@@ -351,6 +358,19 @@ class ProductController extends Controller
             $count = '';
         }
 
+        $userId = Auth::id();
+        if (Auth::id()) {
+
+            $user = Auth::user();
+
+            $userid = $user->id;
+
+            $counts = Wishlist::where('user_id', $userid)->count();
+        } else {
+            $counts = '';
+        }
+        
+
         // session()->flash('success', 'Child category added successfully!');
 
         // Decode gallery_images
@@ -370,7 +390,7 @@ class ProductController extends Controller
         // dd($product->category->category_name);
     
 
-        return view('home.pages.product_details', compact('product', 'count'));
+        return view('home.pages.product_details', compact('product', 'count','counts'));
     }
 
     public function deleteGalleryImage($imageName)
@@ -404,14 +424,13 @@ class ProductController extends Controller
     public function storeReview(Request $request, $id)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
             'rating' => 'required|integer|min:1|max:5',
             'review' => 'required|string',
         ]);
 
         $review = new Review(); // Assuming you have a Review model
         $review->product_id = $id;
-        $review->name = $validated['name'];
+        // $review->name = $validated['name'];
         $review->rating = $validated['rating'];
         $review->review = $validated['review'];
         $review->save();

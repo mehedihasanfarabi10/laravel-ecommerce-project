@@ -7,41 +7,72 @@
     <title>Invoice</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            background-color: #f8f9fa;
+            color: #333;
         }
 
         .invoice-container {
-            max-width: 700px;
-            margin: auto;
+            max-width: 800px;
+            margin: 30px auto;
+            background: #fff;
             padding: 20px;
             border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .header {
             text-align: center;
             margin-bottom: 30px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 15px;
         }
 
         .header h2 {
             margin: 0;
-            color: crimson;
+            color: #007bff;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: #666;
         }
 
         .details {
-            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .details .left,
+        .details .right {
+            width: 48%;
         }
 
         .details h4 {
-            margin: 0 0 5px;
+            margin-bottom: 10px;
+            color: #007bff;
+            text-transform: uppercase;
+        }
+
+        .details p {
+            margin: 5px 0;
+            font-size: 0.9rem;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        table thead {
+            background-color: #007bff;
+            color: #fff;
         }
 
         table,
@@ -52,41 +83,83 @@
 
         th,
         td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
+        }
+
+        th {
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        td img {
+            display: block;
+            max-height: 100px;
+            max-width: 100px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .cod-image {
+            max-height: 100px;
+            max-width: 100px;
+            object-fit: cover;
+            border: 1px solid #f65555;
+            border-radius: 4px;
         }
 
         .total {
             text-align: right;
-            margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 0.85rem;
         }
     </style>
 </head>
 
 <body>
     <div class="invoice-container">
+        <!-- Header -->
         <div class="header">
             <h2>Invoice</h2>
-            <p>Order ID: {{ $order->id }}</p>
+            <p>Order ID: {{ $order->order_number }}</p>
+            <p>Date: {{ date('d M Y') }}</p>
         </div>
 
+        <!-- Customer and Store Details -->
         <div class="details">
-            <h4>Customer Details:</h4>
-            <p><strong>Name:</strong> {{ $order->user->name }}</p>
-            <p><strong>Address:</strong> {{ $order->user->address }}</p>
-            <p><strong>Phone:</strong> {{ $order->user->phone }}</p>
+            <div class="left">
+                <h4>Customer Information</h4>
+                <p><strong>Name:</strong> {{ $order->user->name }}</p>
+                <p><strong>Address:</strong> {{ $order->user->address }}</p>
+                <p><strong>Phone:</strong> {{ $order->user->phone }}</p>
+            </div>
+            <div class="right">
+                <h4>Store Information</h4>
+                <p><strong>Store:</strong> Mehedi Store</p>
+                <p><strong>Shop Address:</strong> Rangpur, Dhaka, Bangladesh</p>
+                <p><strong>Contact:</strong> 01302124986</p>
+            </div>
         </div>
 
-        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;" border="1">
+        <!-- Order Table -->
+        <table>
             <thead>
                 <tr>
-                    <th style="width: 30%;">Product</th>
-                    <th style="width: 15%;">Price</th>
-                    <th style="width: 15%;">Quantity</th>
-                    <th style="width: 20%;">Image</th>
-                    <th style="width: 20%;">Total</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Image</th>
+                    <th>Payment Status</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -94,20 +167,29 @@
                     <td>{{ $order->product->title }}</td>
                     <td>${{ number_format($order->product->price, 2) }}</td>
                     <td>{{ $order->quantity }}</td>
+                    <td><img src="products/{{ $order->product->image }}" alt="{{ $order->product->title }}"></td>
                     <td>
-                        @if(isset($order->product->image))
-                            <img height="100" width="100" src="products/{{ $order->product->image }}">
+                        @if ($order->payment_status == 'cash on delivery')
+                            <img class="cod-image" src="images/cod.png" alt="Cash on Delivery">
                         @else
-                            N/A
+                            {{ ucfirst($order->payment_status) }}
                         @endif
                     </td>
-                    <td>${{ number_format($order->price * $order->quantity, 2) }}</td>
+                    <td>${{ number_format($order->product->price * $order->quantity, 2) }}</td>
                 </tr>
             </tbody>
         </table>
-        
 
-       
+        <!-- Total Section -->
+        <div class="total">
+            <p>Grand Total: ${{ number_format($order->product->price * $order->quantity, 2) }}</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Thank you for shopping with us!</p>
+            <p>If you have any questions, contact us at support@example.com</p>
+        </div>
     </div>
 </body>
 

@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Filesystem\Filesystem;
 
 
@@ -124,11 +125,13 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-//     'providers' => [
-//     Flasher\Laravel\FlasherServiceProvider::class,
-//     Illuminate\Filesystem\FilesystemServiceProvider::class,
+    //     'providers' => [
+    //     Flasher\Laravel\FlasherServiceProvider::class,
+    //     Illuminate\Filesystem\FilesystemServiceProvider::class,
 
-// ],
+    // ],
+    
+
 
 
 ];

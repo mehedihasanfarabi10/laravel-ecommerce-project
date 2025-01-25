@@ -215,6 +215,12 @@
                 <i class="fas fa-box"></i> Orders
             </a>
         </li>
+
+        <li class="{{ request()->is('customer/support') ? 'active' : '' }}">
+            <a  href="{{ route('customer.contact') }}">
+                <i class="fas fa-box"></i> Customer Contact
+            </a>
+        </li>
         <li>
             <a href="#">
                 <i class="fas fa-sign-out-alt"></i> Login page

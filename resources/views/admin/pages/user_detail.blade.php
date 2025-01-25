@@ -6,6 +6,13 @@
 
 @section('content')
 
+    <style>
+        .table tr:hover{
+            background-color: white;
+            color: black;
+        }
+    </style>
+
     {{--  Main Content  --}}
 
     <div class="d-flex align-items-stretch">
@@ -33,7 +40,7 @@
                 </thead>
                 <tbody>
                     @forelse($users as $user)
-                        <tr>
+                        <tr style="background-color: white;color:black;">
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>

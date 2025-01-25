@@ -276,6 +276,8 @@
         <div class="product-details">
             <div class="product-title">{{ $product->title }}</div>
             <div class="product-price">${{ number_format($product->price, 2) }}</div>
+            <div class="product-category">Brand Name : {{ $product->brand->name ?? 'N/A' }}</div>
+
             <div class="product-category">Category: {{ $product->categories->category_name ?? 'No category assigned' }} >
                 {{ $product->subcategory->subcategory_name ?? 'No subcategory assigned' }} >
                 {{ $product->childcategory->childcategory_name ?? 'No childcategory assigned' }}
@@ -341,10 +343,12 @@
                     </select>
                 </div>
 
-                <div class="form-group mb-3">
+                {{--  Auto Calculate Total Price Updating Quantity  --}}
+
+                {{--  <div class="form-group mb-3">
                     <label for="total">Total Price:</label>
                     <input type="text" id="total" class="form-control" value="{{ $product->price }}" readonly>
-                </div>
+                </div>  --}}
 
                 <div class="form-group">
                     <button type="submit" class="add-to-cart-btn ">Add To Cart</button>
@@ -374,11 +378,11 @@
             <h2 class="mb-4 text-primary">Leave a Review</h2>
             <form action="{{ route('product.review', $product->id) }}" method="POST">
                 @csrf
-                <div class="mb-3">
+                {{--  <div class="mb-3">
                     <label for="name" class="form-label">Your Name:</label>
                     <input type="text" id="name" name="name" class="form-control"
                         value="{{ Auth::user()->name }}" placeholder="Enter your name" readonly>
-                </div>
+                </div>  --}}
                 <div class="mb-3">
                     <label for="rating" class="form-label">Rating:</label>
                     <select id="rating" name="rating" class="form-select" required>
@@ -405,7 +409,7 @@
                     @foreach ($product->reviews as $review)
                         <div class="review-item p-3 mb-4 bg-white rounded shadow-sm">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <strong class="text-dark">{{ $review->name }}</strong>
+                                <strong class="text-dark">{{ Auth::user()->name }}</strong>
                                 <div class="rating-stars">
                                     @for ($i = 1; $i <= 5; $i++)
                                         <span class="star {{ $i <= $review->rating ? 'filled' : '' }}">★</span>

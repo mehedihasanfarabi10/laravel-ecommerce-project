@@ -173,7 +173,8 @@
     @endif
 
     <div class="container-fluid st">
-        <div class="form-container">
+        {{--  1st  --}}
+        <div class="form-container" style="width: 70%;">
             <form action="{{ url('update_product', $product->id) }}" method="post" enctype="multipart/form-data">
                 @csrf
 
@@ -230,15 +231,26 @@
 
 
                 <!-- Price -->
-                <div class="mb-3">
+                <div class="mt-4 mb-3"
+                    style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px;">
                     <label for="productPrice" class="st form-label">Price</label>
                     <input type="number" class="form-control" id="productPrice" name="price"
                         value="{{ old('price', $product->price) }}" placeholder="Enter product price" step="0.01"
                         required>
+
+
+                    <!-- Quantity -->
+
+                    <label for="productQuantity" class="st form-label">Quantity</label>
+                    <input type="number" class="form-control" id="productQuantity" name="quantity"
+                        value="{{ old('quantity', $product->quantity) }}" placeholder="Enter product quantity" required>
                 </div>
 
+
+
                 <!-- Category -->
-                <div class="mb-3">
+                <div class="mt-4 mb-3"
+                    style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px;">
                     <label for="productCategory" class="st form-label">Category</label>
                     <select class="form-select" id="productCategory" name="category_id" required>
                         <option value="" disabled>Select category</option>
@@ -249,10 +261,10 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
 
-                <!-- Sub Category -->
-                <div class="mb-3">
+
+                    <!-- Sub Category -->
+
                     <label for="productCategory" class="st form-label">Subcategory</label>
                     <select class="form-select" id="productCategory" name="subcategory_id" required>
                         <option value="" disabled>Select subcategory</option>
@@ -264,10 +276,10 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
 
-                <!-- Child Category -->
-                <div class="mb-3">
+
+                    <!-- Child Category -->
+
                     <label for="productCategory" class="st form-label">Childcategory</label>
                     <select class="form-select" id="childcategory_id" name="childcategory_id" required>
                         <option value="" disabled>Select subcategory</option>
@@ -279,13 +291,26 @@
                             </option>
                         @endforeach
                     </select>
+
+                    <!-- Brands -->
+
+                    <label for="Brands" class="st form-label">Brands</label>
+                    <select class="form-select" id="Brands" name="brand_id" required>
+                        <option value="" disabled>Select Brands</option>
+                        @foreach ($brands as $brand)
+                            <option value="{{ $brand->id }}" {{ $product->brand_id == $brand->id ? 'selected' : '' }}>
+                                {{ $brand->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <!-- Sizes -->
                 <!-- Sizes -->
-                <div class="mb-3">
-                    <label class="st form-label">Sizes</label>
-                    <div class="d-flex flex-wrap">
+                <div class="mt-4 mb-3"
+                    style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 10px;">
+                    <label class="st form-label">Sizes : </label>
+                    <div class="d-flex flex-wrap" style="border: 1px solid black;">
                         @foreach ($size as $s)
                             <div class="form-check me-3">
                                 <input type="checkbox" class="form-check-input" id="size_{{ $s->id }}"
@@ -296,15 +321,15 @@
                             </div>
                         @endforeach
                     </div>
-                </div>
 
 
-                <!-- Colors -->
-                <div class="mb-3">
-                    <label class="st form-label">Colors</label>
-                    <div class="d-flex flex-wrap">
+
+                    <!-- Colors -->
+
+                    <label class="st form-label">Colors : </label>
+                    <div class="d-flex flex-wrap" style="border: 1px solid black;">
                         @foreach ($color as $c)
-                            <div class="form-check me-3">
+                            <div class="form-check mr-3">
                                 <input type="checkbox" class="form-check-input" id="color_{{ $c->id }}"
                                     name="color[]" value="{{ $c->id }}"
                                     {{ is_array($product->color) && in_array($c->id, $product->color) ? 'checked' : '' }}>
@@ -315,18 +340,6 @@
                     </div>
                 </div>
 
-
-
-
-
-
-
-                <!-- Quantity -->
-                <div class="mb-3">
-                    <label for="productQuantity" class="st form-label">Quantity</label>
-                    <input type="number" class="form-control" id="productQuantity" name="quantity"
-                        value="{{ old('quantity', $product->quantity) }}" placeholder="Enter product quantity" required>
-                </div>
 
                 <div class="mb-3">
                     <label for="is_latest">Latest Product:</label>
@@ -354,6 +367,9 @@
                 <button type="submit" class="btn btn-primary">Update Product</button>
             </form>
         </div>
+
+        {{--  2nd  --}}
+       
     </div>
     {{--  </div>  --}}
 
@@ -398,35 +414,35 @@
         // Fetch and update subcategories when category changes
         document.getElementById('category_id').addEventListener('change', function() {
             const categoryId = this.value;
-    
+
             fetch(`/get-subcategories/${categoryId}`)
                 .then(response => response.json())
                 .then(data => {
                     const subcategoryDropdown = document.getElementById('subcategory_id');
                     subcategoryDropdown.innerHTML = '<option value="">Select Subcategory</option>';
-    
+
                     data.subcategories.forEach(subcategory => {
                         subcategoryDropdown.innerHTML += `
                             <option value="${subcategory.id}">${subcategory.subcategory_name}</option>
                         `;
                     });
-    
+
                     // Clear child category dropdown
                     const childcategoryDropdown = document.getElementById('childategory_id');
                     childcategoryDropdown.innerHTML = '<option value="">Select Childcategory</option>';
                 });
         });
-    
+
         // Fetch and update child categories when subcategory changes
         document.getElementById('subcategory_id').addEventListener('change', function() {
             const subcategoryId = this.value;
-    
+
             fetch(`/get-childcategories/${subcategoryId}`)
                 .then(response => response.json())
                 .then(data => {
                     const childcategoryDropdown = document.getElementById('childategory_id');
                     childcategoryDropdown.innerHTML = '<option value="">Select Childcategory</option>';
-    
+
                     data.childcategories.forEach(childcategory => {
                         childcategoryDropdown.innerHTML += `
                             <option value="${childcategory.id}">${childcategory.childcategory_name}</option>

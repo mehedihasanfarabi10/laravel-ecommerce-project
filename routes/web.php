@@ -16,6 +16,13 @@ use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\StripeController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\WishlistController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ChatController;
+
+use App\Http\Controllers\AdminChatController;
+
 
 Route::controller(StripeController::class)->group(function(){
 
@@ -32,10 +39,54 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::get('/',[HomeController::class,'home']);
 
+// user update
+
+Route::post('/user/update/',[HomeController::class,'updates'])->name('user.update');
+
+
+// Wishlist
+
+Route::post('/add-to-wishlist', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
+Route::get('/view/wishlist/', [WishlistController::class, 'index'])->name('wishlist.view');
+Route::delete('/wishlist/delete/{id}', [WishlistController::class, 'destroy'])->name('wishlist.delete');
+
+
+
 // Cke Editor
 // Route::post('/upload-image-ck',[HomeController::class,'ckeditorupload'])->name('ckeditor.upload');
 
 // Product Size and Color 
+
+// Contact
+
+Route::post('contactform/submit/',[ContactController::class,'store'])->name('contactform.submit');
+
+Route::get('contactform/admin/response/',[ContactController::class,'index'])->middleware(['auth', 'admin'])->name('customer.contact');
+Route::get('contactform/admin/edit/{id}',[ContactController::class,'edit'])->middleware(['auth', 'admin'])->name('customer.contact.edit');
+Route::post('contactform/admin/update/{id}',[ContactController::class,'update'])->middleware(['auth', 'admin'])->name('customer.contact.update');
+Route::get('contactform/admin/delete/{id}',[ContactController::class,'destroy'])->middleware(['auth', 'admin'])->name('customer.contact.delete');
+
+
+
+// Notification
+
+Route::get('/admin/notifications', [NotificationController::class, 'getNotifications']);
+Route::get('/admin/notifications/clear/', [NotificationController::class, 'clearNotifications'])->name('notification.clear');
+
+
+//User Chat
+
+Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::get('/chat/messages/{adminId}', [ChatController::class, 'fetchMessages']);
+Route::post('/chat/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+
+// Admin Chat
+
+
+Route::get('admin/chat', [AdminChatController::class, 'index'])->name('dd.chat.ddd');
+
+    Route::get('admin/chat/{userId}', [AdminChatController::class, 'showUserMessages'])->name('admin.chat.user');
+    Route::post('admin/chat/reply', [AdminChatController::class, 'sendReply'])->name('admin.chat.reply');
 
 
 

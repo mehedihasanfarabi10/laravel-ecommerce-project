@@ -24,6 +24,7 @@ class Product extends Model
         'description',
         'image',
         'price',
+        'brand_id',
         'category_id',
         'subcategory_id',
         'childcategory_id',
@@ -59,6 +60,11 @@ class Product extends Model
     public function childcategory()
     {
         return $this->belongsTo(ChildCategory::class, 'childcategory_id','id');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id','id');
     }
 
 

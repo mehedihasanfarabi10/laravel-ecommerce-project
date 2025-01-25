@@ -1,7 +1,12 @@
 <head>
     <!-- Custom Stylesheet -->
     <link href="{{ asset('sellers/css/style.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <header class="header_section">
@@ -48,21 +53,28 @@
                     @auth
 
 
-                    <ul class="navbar-nav">
-                       
-                        <li class="nav-item active">
-                            <a href="{{ url('mycart') }}" style="color: white!important">
-                                <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-                                {{ $count ?? 0 }}
-                            </a>
-                        </li>
-                        <li class="nav-item active">
-                            <a href="{{ route('seller.login') }}" style="color: white!important">
-                                Become Seller
-                            </a>
-                        </li>
-                    </ul>
-                    
+                        <ul class="navbar-nav">
+
+                            <li class="nav-item active">
+                                <a href="{{ url('mycart') }}" style="color: white!important">
+                                    <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                    {{ $count ?? 0 }}
+                                </a>
+                            </li>
+                            <li class="nav-item active">
+                                <a href="{{ route('wishlist.view') }}" style="color: white!important">
+                                    <i class="fas fa-heart" style="color: #ffffff; font-size: 20px; cursor: pointer;"></i>
+
+                                    {{ $counts ?? 0 }}
+                                </a>
+                            </li>
+                            <li class="nav-item active">
+                                <a href="{{ route('seller.login') }}" style="color: white!important">
+                                    Become Seller
+                                </a>
+                            </li>
+                        </ul>
+
 
 
                         {{--   Search   --}}
@@ -87,7 +99,8 @@
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative" data-toggle="dropdown">
                                 <span class="activity active"></span>
-                                <img src="{{asset('sellers/images/user/1.png')}}" height="40" width="40" alt="">
+                                <img src="{{ asset('sellers/images/user/1.png') }}" height="40" width="40"
+                                    alt="">
                             </div>
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
@@ -96,12 +109,12 @@
                                             <a href="{{ route('user.profile') }}"><i class="icon-user"></i>
                                                 <span>Profile</span></a>
                                         </li>
+
                                         <li>
-                                            <a href="">
-                                                <i class="icon-envelope-open"></i> <span>Inbox</span>
-                                                <div class="badge gradient-3 badge-pill gradient-1">3</div>
-                                            </a>
+                                            <a href="{{ route('chat.index') }}"><i class="icon-user"></i>
+                                                <span>Chat</span></a>
                                         </li>
+
                                         <li>
                                             <a href="{{ url('myorders') }}">
                                                 <i class="fa-solid fa-signal"></i><span>My Order</span>
@@ -109,8 +122,15 @@
                                             </a>
                                         </li>
 
-                                        
-        
+                                        <li>
+                                            <a href="{{ route('track.order') }}">
+                                                <i class="fa-brands fa-apple"></i> <span>Track Order</span>
+                                                <div class="badge gradient-3 badge-pill gradient-1">3</div>
+                                            </a>
+                                        </li>
+
+
+
                                         {{--  <hr class="my-2">
                                         <li>
                                             <a href="page-lock.html"><i class="icon-lock"></i> <span>Lock
@@ -149,7 +169,7 @@
                             </span>
                         </a>
 
-                       
+
 
                     @endauth
                 @endif

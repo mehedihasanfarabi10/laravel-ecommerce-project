@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Cart;
+use App\Models\Address;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Address;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
@@ -103,11 +104,24 @@ class CartController extends Controller
             $count = '';
         }
 
+        $userId = Auth::id();
+        if (Auth::id()) {
+
+            $user = Auth::user();
+
+            $userid = $user->id;
+
+            $counts = Wishlist::where('user_id', $userid)->count();
+        } else {
+            $counts = '';
+        }
+        
+
         $cart = Cart::where('user_id', $userid)->get();
 
         $address = Address::where('user_id', $user->id)->first();
 
-        return view('home.orders.mycart', compact('count', 'cart','address'));
+        return view('home.orders.mycart', compact('count', 'cart','address','counts'));
     }
 
     public function remove($id)

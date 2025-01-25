@@ -20,3 +20,7 @@ Route::get('order_search', [OrderController::class, 'order_search'])->middleware
 
 
 Route::get('print_pdf_user/{id}',[OrderController::class,'print_pdf_user']);
+
+
+Route::get('track/order/',[OrderController::class,'tracking'])->name('track.order');
+Route::get('track/order/search',[OrderController::class,'track_order'])->name('track_order');

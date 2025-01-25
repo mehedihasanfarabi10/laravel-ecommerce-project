@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Stripe;
+use Session;
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
-use App\Models\ProductColor;
+use App\Models\Wishlist;
 use App\Models\ProductSize;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
-use Stripe;
+use App\Models\ProductColor;
 // use Session;
 
 // use Stripe\Stripe;
 // use Stripe\PaymentIntent;
-use Session;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -36,13 +37,26 @@ class HomeController extends Controller
         } else {
             $count = '';
         }
+        
+        $userId = Auth::id();
+        if (Auth::id()) {
+
+            $user = Auth::user();
+
+            $userid = $user->id;
+
+            $counts = Wishlist::where('user_id', $userid)->count();
+        } else {
+            $counts = '';
+        }
+        
 
         $latestProducts = Product::where('is_latest', true)->get();
         $featuredProducts = Product::where('is_featured', true)->get();
         $hotDeals = Product::where('is_hot_deal', true)->get();
         $womensCollection = Product::where('collection', 'Womens')->get();
     
-        return view('home.index', compact('product','count','latestProducts', 'featuredProducts', 'hotDeals', 'womensCollection'));
+        return view('home.index', compact('product','count','counts','latestProducts', 'featuredProducts', 'hotDeals', 'womensCollection'));
     }
 
     public function product_search2(Request $request)
@@ -103,6 +117,32 @@ class HomeController extends Controller
 
         return view('home.index', compact('product','count','latestProducts', 'featuredProducts', 'hotDeals', 'womensCollection'));
     }
+
+    public function updates(Request $request)
+    {
+        // Get the currently authenticated user
+        $user = Auth::user();
+    
+        // Validate incoming data
+        $request->validate([
+            'user_name' => 'required|string|max:255',
+            'user_phone' => 'required|string|max:15',
+            'user_address' => 'required|string|max:255',
+        ]);
+    
+        // Update user details
+        $user->name = $request->user_name;
+        $user->phone = $request->user_phone;
+        $user->address = $request->user_address;
+    
+        // Save changes to the database
+        $user->save();
+    
+        // Provide feedback to the user
+        toastr()->success('User updated successfully');
+        return redirect()->back();
+    }
+    
 
 
 
