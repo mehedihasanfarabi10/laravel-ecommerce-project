@@ -48,7 +48,7 @@ class ChatController extends Controller
 
         // Save the message to the database
         $message = new Message();
-        $message->sender_id =Auth::id();
+        $message->sender_id = Auth::id();
         $message->receiver_id = $request->receiver_id;
         $message->message = $request->message;
 
