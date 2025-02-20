@@ -173,6 +173,7 @@
                     @csrf
                     <div>
                         <label>Select Category:</label>
+                        
                         <select name="category_id" required>
                             <option value="">Not Selected --</option>
                             @foreach ($category as $cat)
